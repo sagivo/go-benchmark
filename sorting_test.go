@@ -28,9 +28,21 @@ func mergeSortAsync(l []int, c chan []int) {
 }
 
 func mergeSort(l []int) []int {
-	if len(l) < 2 {
+	// When length of original array is large (for example, 1000000 items),
+	// "Bubble sort" is better then extra calls of recursive functions for low-range arrays
+
+	// For example, min. length of array = 10
+	if len(l) < 10 {
+		for i := 0; i < len(l)-1; i++ {
+			for j := i+1; j < len(l); j++ {
+				if l[j] < l[i] {
+					l[i] = l[j]
+				}
+			}
+		}
 		return l
 	}
+
 	mid := len(l) / 2
 	a := mergeSort(l[:mid])
 	b := mergeSort(l[mid:])
