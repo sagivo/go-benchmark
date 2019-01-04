@@ -71,6 +71,11 @@ func readLines(path string) ([]string, error) {
 	var lines []string
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
+		// ignore blank lines
+		d := scanner.Text()
+		if d == "" {
+			continue
+		}
 		lines = append(lines, scanner.Text())
 	}
 	return lines, scanner.Err()
