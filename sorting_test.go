@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"fmt"
+	"log"
 	"os"
 	"sort"
 	"strconv"
@@ -76,28 +76,40 @@ func readLines(path string) ([]string, error) {
 	return lines, scanner.Err()
 }
 
-func load() {
-	l = make([]int, 10000000)
-	lines, err := readLines("arr.txt") //your array file
+func load(filename string) ([]int, error) {
+	lines, err := readLines(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	l := make([]int, len(lines))
 	for i, line := range lines {
 		if i <= len(l) {
 			l[i], err = strconv.Atoi(line)
-		}
-		if err != nil {
-			fmt.Println(err)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
+	return l, nil
 }
 
 func BenchmarkMergesort(b *testing.B) {
-	load()
+	l, err := load("arr1000000.txt")
+	if err != nil {
+		log.Fatalln("Error while loading input file: ", err)
+	}
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		mergeSort(l)
 	}
 }
 
-func aBenchmarkMergesortAsync(b *testing.B) {
+func BenchmarkMergesortAsync(b *testing.B) {
+	l, err := load("arr1000000.txt")
+	if err != nil {
+		log.Fatalln("Error while loading input file: ", err)
+	}
 	c := make(chan []int)
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
@@ -107,6 +119,10 @@ func aBenchmarkMergesortAsync(b *testing.B) {
 }
 
 func BenchmarkQuicksort(b *testing.B) {
+	l, err := load("arr1000000.txt")
+	if err != nil {
+		log.Fatalln("Error while loading input file: ", err)
+	}
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
 		sort.Ints(l)
