@@ -71,18 +71,13 @@ func readLines(path string) ([]string, error) {
 	var lines []string
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		// ignore blank lines
-		d := scanner.Text()
-		if d == "" {
-			continue
-		}
 		lines = append(lines, scanner.Text())
 	}
 	return lines, scanner.Err()
 }
 
-func load(filename string) ([]int, error) {
-	lines, err := readLines(filename)
+func load() ([]int, error) {
+	lines, err := readLines("arr.txt")
 	if err != nil {
 		return nil, err
 	}
@@ -100,7 +95,7 @@ func load(filename string) ([]int, error) {
 }
 
 func BenchmarkMergesort(b *testing.B) {
-	l, err := load("arr1000000.txt")
+	l, err := load()
 	if err != nil {
 		log.Fatalln("Error while loading input file: ", err)
 	}
@@ -111,7 +106,7 @@ func BenchmarkMergesort(b *testing.B) {
 }
 
 func BenchmarkMergesortAsync(b *testing.B) {
-	l, err := load("arr1000000.txt")
+	l, err := load()
 	if err != nil {
 		log.Fatalln("Error while loading input file: ", err)
 	}
@@ -124,7 +119,7 @@ func BenchmarkMergesortAsync(b *testing.B) {
 }
 
 func BenchmarkQuicksort(b *testing.B) {
-	l, err := load("arr1000000.txt")
+	l, err := load()
 	if err != nil {
 		log.Fatalln("Error while loading input file: ", err)
 	}
